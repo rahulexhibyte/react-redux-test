@@ -1,6 +1,6 @@
 import { Tooltip } from "antd";
 import { useDispatch } from "react-redux";
-import { deleteTodo } from "../../actions";
+import { deleteTodo, editModal } from "../../actions";
 
 const TodoItem = (props) => {
   const { id, description, randomColors } = props;
@@ -17,7 +17,12 @@ const TodoItem = (props) => {
       >
         <div className="text-right font-bold">
           <Tooltip title="Edit Description">
-            <span className="cursor-pointer mx-3">Edit</span>
+            <span
+              className="cursor-pointer mx-3"
+              onClick={() => dispatch(editModal(id))}
+            >
+              Edit
+            </span>
           </Tooltip>
 
           <Tooltip title="Delete Description">

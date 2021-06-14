@@ -1,12 +1,14 @@
 import { Input, Modal, Form, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { modalClose, addTodo } from "../../actions";
+import { modalClose, addTodo, editTodo } from "../../actions";
 const { TextArea } = Input;
 
 const ToDoFormModal = (props) => {
   const { title } = props;
   const [form] = Form.useForm();
-  const isModalShow = useSelector((state) => state.isModalShow);
+  const { todos, isModalShow, isEditMode, editTodoId } = useSelector(
+    (state) => state
+  );
   const dispatch = useDispatch();
 
   const closeModal = () => {
@@ -28,12 +30,22 @@ const ToDoFormModal = (props) => {
                   id: new Date().getMilliseconds(),
                 };
                 console.log(todoItem);
-                dispatch(addTodo(todoItem));
+                isEditMode
+                  ? dispatch(
+                      editTodo(
+                        todos[
+                          todos.findIndex((item) => item.id === editTodoId)
+                        ],
+                        todoItem
+                      )
+                    )
+                  : dispatch(addTodo(todoItem));
                 form.resetFields();
+                closeModal();
               });
             }}
           >
-            Add ToDo
+            {isEditMode ? "Edit ToDo" : "Add ToDo"}
           </Button>,
           <Button onClick={closeModal}>Cancel</Button>,
         ]}
