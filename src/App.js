@@ -3,6 +3,9 @@ import { Route, Switch } from "react-router-dom";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import Dashboard from "./screens/Dashboard";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import constants from "./constants";
 
 function App() {
   return (

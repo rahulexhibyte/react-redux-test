@@ -1,7 +1,7 @@
 import constants from "../constants";
-
 const initState = {
   todos: [],
+  isSuccess: false,
   isProgress: false,
   isSignin: false,
   isError: false,
@@ -19,18 +19,42 @@ const reducers = (state = initState, action) => {
     case constants.SIGNIN_PROGRESS:
     case constants.SIGNUP_PROGRESS:
     case constants.PROGRESS:
-      return { ...state, isProgress: true };
+      return { ...state, isProgress: true, isError: false, error: null };
 
-    case constants.SIGNIN:
+    case constants.SIGNIN_SUCESS:
       return {
         ...state,
-        isProgress: false,
+        isSuccess: false,
         isSignin: true,
+        user: { userEmail: action.email },
+        isProgress: false,
+        isError: false,
+        error: null,
+      };
+    case constants.SIGNUP_SUCCESS:
+      return {
+        ...state,
+        isSuccess: true,
+        isSignin: false,
+        user: { userEmail: action.email },
+        isProgress: false,
+        isError: false,
         error: null,
       };
 
+    case constants.SIGNIN_FAILED:
+    case constants.SIGNUP_FAILED:
+      console.log(34, action.error);
+      return {
+        ...state,
+        isProgress: false,
+        isSuccess: false,
+        isError: true,
+        error: action.error.message,
+      };
+
     case constants.ADD_TODO:
-      return { todos: [...state.todos, action.todoItem] };
+      return { ...state, todos: [...state.todos, action.todoItem] };
 
     case constants.DELETE_TODO:
       console.log(action.todoId);
@@ -38,9 +62,10 @@ const reducers = (state = initState, action) => {
         (todoItem) => todoItem.id !== action.todoId
       );
       return {
-        todos: filteredToDos,
         ...state,
+        todos: filteredToDos,
       };
+
     case constants.EDIT_TODO:
       console.log(action.todoItem, action.newItem);
       const editedTodos = Object.assign(state.todos);
@@ -49,8 +74,8 @@ const reducers = (state = initState, action) => {
       );
       editedTodos[id].description = action.newItem.description;
       return {
-        todos: editedTodos,
         ...state,
+        todos: editedTodos,
       };
 
     case constants.MODAL_SHOW:
@@ -58,6 +83,7 @@ const reducers = (state = initState, action) => {
         ...state,
         isModalShow: true,
       };
+
     case constants.MODAL_CLOSE:
       return {
         ...state,
@@ -77,6 +103,7 @@ const reducers = (state = initState, action) => {
     case "HELLO":
       console.log("Hey World");
       return state;
+
     default:
       return state;
   }

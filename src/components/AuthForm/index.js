@@ -1,12 +1,21 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message, notification } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { Redirect, useHistory } from "react-router-dom";
 import constants from "../../constants";
 
 const AuthForm = (props) => {
   const { isSignIn } = props;
 
-  const isProgress = useSelector((state) => state.isProgress);
+  const {
+    isProgress,
+    isSuccess,
+    isError,
+    error,
+    user,
+    isSignin: isLogin,
+  } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const type = isSignIn ? "Sign In" : "Sign Up";
 
@@ -17,6 +26,31 @@ const AuthForm = (props) => {
       value: values,
     });
   };
+
+  const displayMessage = ({ message, description, path }) => {
+    notification.info({
+      message,
+      description,
+      placement: "bottomRight",
+      duration: 10,
+    });
+    history.push(path);
+  };
+
+  if (!isSignIn && isSuccess) {
+    displayMessage({
+      message: "Account Created Succssfully",
+      description: `You have successfully created a account with ${user.userEmail}`,
+      path: "/auth/signin",
+    });
+  } else if (isSignIn && isLogin) {
+    displayMessage({
+      message: "Sign In Successfully",
+      description: `You have successfully Sign In with ${user.userEmail}`,
+      path: "/todo",
+    });
+  }
+
   return (
     <>
       <div className="text-2xl font-bold text-center">{type}</div>
@@ -32,12 +66,30 @@ const AuthForm = (props) => {
             type="primary"
             htmlType="submit"
             loading={isProgress ? true : false}
-            // href={isSignIn ? "/todo" : "/auth/signin"}
           >
             {type}
           </Button>
         </Form>
       </div>
+      {!isSignIn &&
+        isSuccess &&
+        notification.info({
+          message: "Account Created Succssfully",
+          description: `You have successfully created a account with ${user.userEmail}`,
+          placement: "bottomRight",
+          duration: 10,
+        }) &&
+        history.push("/auth/signin")}
+      {isSignIn &&
+        isSuccess &&
+        notification.info({
+          message: "Sign In Successfully",
+          description: `You have successfully Sign In with ${user.userEmail}`,
+          placement: "bottomRight",
+          duration: 10,
+        }) &&
+        history.push("/todo")}
+      {isError && message.error(`${error}`, 5)}
     </>
   );
 };
