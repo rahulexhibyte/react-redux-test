@@ -13,9 +13,10 @@ const TodoItem = (props) => {
   return (
     <>
       <div
-        className={`p-5 h-40 bg-${randomColors}-500 bg-opacity-70 w-1/6 m-5 rounded-2xl`}
+        className={`p-5 h-40 bg-${randomColors}-300 bg-opacity-50 w-1/6 m-5 rounded-2xl flex content-between flex-col`}
       >
-        <div className="text-right font-bold">
+        <span className="font-bold">{description}</span>
+        <div className="text-right font-bold ">
           <Tooltip title="Edit Description">
             <span
               className="cursor-pointer mx-3"
@@ -31,7 +32,6 @@ const TodoItem = (props) => {
             </span>
           </Tooltip>
         </div>
-        <span className="font-bold">{description}</span>
       </div>
     </>
   );

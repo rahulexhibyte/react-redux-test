@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import TodoItem from "../TodoItem";
 
-const colors = ["red", "green", "blue", "purple", "yellow", "pink"];
+const colors = ["red", "green", "blue", "purple", "yellow", "pink", "indigo"];
 
 const ToDoList = (props) => {
   const todos = useSelector((state) => state.todos);
